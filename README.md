@@ -1,0 +1,1 @@
+Xposed module to change LG G2's skin to a AOSP variant
