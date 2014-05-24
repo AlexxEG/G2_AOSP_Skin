@@ -110,7 +110,7 @@ public class LGSettings {
                 put("ic_settings_share_connect", R.drawable.ic_settings_share_connect);
                 put("ic_settings_sound", R.drawable.ic_settings_sound);
                 put("ic_settings_storage", R.drawable.ic_settings_storage);
-                put("ic_settings_sync", R.drawable.ic_settings_sync);
+                put("ic_settings_sync", R.drawable.ic_account_sync);
                 put("ic_settings_wireless", R.drawable.ic_settings_wireless);
                 put("ic_taskmanaser_empty", R.drawable.ic_taskmanaser_empty);
                 put("list_accessory", R.drawable.list_accessory);
