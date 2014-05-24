@@ -1,10 +1,12 @@
 package com.gmail.alexellingsen.g2aospskin.hooks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.AttributeSet;
 import com.gmail.alexellingsen.g2aospskin.R;
@@ -92,9 +94,11 @@ public class LGSettings {
         }
 
 
-        String[] activities = new String[]{
+        final String[] activities = new String[]{
                 "com.android.settings.Settings",
                 "com.android.settings.quietmode.QuietModeMainActivity",
+                "com.android.settings.quietmode.QuietModeScheduleSettingsActivity",
+                "com.android.settings.quietmode.QuietModeAllowedCallSettingsActivity",
                 "com.android.settings.vibratecreation.VibratePicker",
                 "com.android.settings.lockscreen.ConfirmLockKnockOn",
                 "com.android.settings.lockscreen.ConfirmLockPassword",
@@ -119,8 +123,29 @@ public class LGSettings {
                             PreferenceActivity activity = (PreferenceActivity) param.thisObject;
 
                             activity.setTheme(android.R.style.Theme_Holo);
+                        }
+                    }
+            );
+        }
 
-                            XposedBridge.log("'onCreate' running");
+        String[] dialogs = new String[]{
+                "com.android.settings.lge.ScreenOffEffectPopup",
+                "com.android.settings.wifi.WifiDialogActivity"
+        };
+
+        for (String dialog : dialogs) {
+            XposedHelpers.findAndHookMethod(
+                    dialog,
+                    lpparam.classLoader,
+                    "onCreate",
+                    Bundle.class,
+
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            Activity dialog = (Activity) param.thisObject;
+
+                            dialog.setTheme(android.R.style.Theme_Holo_Dialog);
                         }
                     }
             );
