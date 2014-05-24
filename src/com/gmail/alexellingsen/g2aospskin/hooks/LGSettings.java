@@ -1,8 +1,12 @@
 package com.gmail.alexellingsen.g2aospskin.hooks;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceActivity;
+import android.util.AttributeSet;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
@@ -11,6 +15,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +29,51 @@ public class LGSettings {
 
     public static void init(SettingsHelper settings) {
         mSettings = settings;
+
+        String[] packages = new String[]{
+                "com.android.settings",
+                "com.android.settings.quietmode",
+                "com.android.settings.vibratecreation",
+                "com.android.settings.lockscreen",
+                "com.android.settings.handsfreemode",
+                "com.android.settings.accounts",
+                "com.android.settings.lge"
+
+        };
+        final ArrayList<String> packagesList = new ArrayList<String>(Arrays.asList(packages));
+
+        XposedHelpers.findAndHookConstructor(
+                "com.android.internal.widget.ActionBarContainer",
+                null,
+                Context.class,
+                AttributeSet.class,
+
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Context context = (Context) param.args[0];
+
+                        XposedBridge.log(context.getClass().getPackage().getName());
+                        XposedBridge.log(context.getClass().getName());
+
+                        if (packagesList.contains(context.getClass().getPackage().getName())) {
+                            TypedArray a = context.getTheme().obtainStyledAttributes(
+                                    android.R.style.Widget_Holo_ActionBar_Solid,
+                                    new int[]{android.R.attr.background, android.R.attr.backgroundStacked});
+                            int attributeResourceId1 = a.getResourceId(0, -1);
+                            int attributeResourceId2 = a.getResourceId(1, -1);
+                            Drawable background = context.getResources().getDrawable(attributeResourceId1);
+                            Drawable backgroundStacked = context.getResources().getDrawable(attributeResourceId2);
+                            a.recycle();
+
+                            XposedHelpers.setObjectField(param.thisObject, "mBackground", background);
+                            XposedHelpers.setObjectField(param.thisObject, "mStackedBackground", backgroundStacked);
+                        }
+
+                        XposedBridge.log("-");
+                    }
+                }
+        );
     }
 
     public static void handleInitPackageResources(InitPackageResourcesParam resparam, XModuleResources modRes) {
@@ -40,10 +91,24 @@ public class LGSettings {
             return;
         }
 
-        if (lpparam.packageName.equals(PACKAGE)) {
-            XposedBridge.log("Hooking 'onCreate'");
+
+        String[] activities = new String[]{
+                "com.android.settings.Settings",
+                "com.android.settings.quietmode.QuietModeMainActivity",
+                "com.android.settings.vibratecreation.VibratePicker",
+                "com.android.settings.lockscreen.ConfirmLockKnockOn",
+                "com.android.settings.lockscreen.ConfirmLockPassword",
+                "com.android.settings.lockscreen.ConfirmLockPattern",
+                "com.android.settings.handsfreemode.HandsFreeModePreferenceActivity",
+                "com.android.settings.accounts.ChooseAccountActivity",
+                "com.android.settings.lge.DeviceInfoLgeNetwork",
+                "com.android.settings.lge.DeviceInfoLgeStatus",
+                "com.android.settings.lge.DeviceInfoLgePhoneIdentity"
+        };
+
+        for (String activity : activities) {
             XposedHelpers.findAndHookMethod(
-                    PACKAGE + ".Settings",
+                    activity,
                     lpparam.classLoader,
                     "onCreate",
                     "android.os.Bundle",
@@ -59,7 +124,6 @@ public class LGSettings {
                         }
                     }
             );
-            XposedBridge.log("Hooked 'onCreate'");
         }
     }
 
