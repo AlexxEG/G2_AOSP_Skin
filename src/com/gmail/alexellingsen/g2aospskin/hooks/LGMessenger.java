@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.R;
-import de.robv.android.xposed.IXposedHookZygoteInit.StartupParam;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -33,10 +32,8 @@ public class LGMessenger {
     private static int ID = -1;
 
     private static ImageView conversationShadow;
-    private static LinearLayout rightButtonsLand;
-    private static LinearLayout rightButtonsPort;
 
-    public static void init(StartupParam startupParam, XModuleResources modRes) throws Throwable {
+    public static void init(XModuleResources modRes) throws Throwable {
         mModRes = modRes;
 
         try {
@@ -120,19 +117,6 @@ public class LGMessenger {
         if (!resparam.packageName.equals(PACKAGE)) {
             return;
         }
-
-        resparam.res.hookLayout(PACKAGE, "layout", "compose_bottom_button_area_right", new XC_LayoutInflated() {
-            @Override
-            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                rightButtonsLand = (LinearLayout) liparam.view.findViewById(
-                        liparam.res.getIdentifier("right_area_port", "id", PACKAGE)
-                );
-
-                rightButtonsPort = (LinearLayout) liparam.view.findViewById(
-                        liparam.res.getIdentifier("right_area_land", "id", PACKAGE)
-                );
-            }
-        });
 
         resparam.res.hookLayout(PACKAGE, "layout", "conversation_list_screen", new XC_LayoutInflated() {
             @Override
