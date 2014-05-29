@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.XModuleResources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +44,7 @@ public class LGMessenger {
                     "android.view.View",
                     null,
                     "setBackground",
-                    "android.graphics.drawable.Drawable",
+                    Drawable.class,
 
                     new XC_MethodHook() {
                         @Override
@@ -67,7 +69,7 @@ public class LGMessenger {
                     "android.view.View",
                     null,
                     "setBackgroundDrawable",
-                    "android.graphics.drawable.Drawable",
+                    Drawable.class,
 
                     new XC_MethodHook() {
                         @Override
@@ -210,7 +212,7 @@ public class LGMessenger {
                     c,
                     lpparam.classLoader,
                     "onCreate",
-                    "android.os.Bundle",
+                    Bundle.class,
 
                     new XC_MethodHook() {
                         @Override
@@ -245,7 +247,7 @@ public class LGMessenger {
         XposedHelpers.findAndHookConstructor(
                 PACKAGE + ".pinchApi.ExEditText",
                 lpparam.classLoader,
-                "android.content.Context",
+                Context.class,
 
                 hook
         );
@@ -253,8 +255,8 @@ public class LGMessenger {
         XposedHelpers.findAndHookConstructor(
                 PACKAGE + ".pinchApi.ExEditText",
                 lpparam.classLoader,
-                "android.content.Context",
-                "android.util.AttributeSet",
+                Context.class,
+                AttributeSet.class,
 
                 hook
         );
@@ -262,9 +264,9 @@ public class LGMessenger {
         XposedHelpers.findAndHookConstructor(
                 PACKAGE + ".pinchApi.ExEditText",
                 lpparam.classLoader,
-                "android.content.Context",
-                "android.util.AttributeSet",
-                "int",
+                Context.class,
+                AttributeSet.class,
+                int.class,
 
                 hook
         );
