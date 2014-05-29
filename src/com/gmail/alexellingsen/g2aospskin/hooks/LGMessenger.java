@@ -169,21 +169,6 @@ public class LGMessenger {
                 }
         );
 
-        XposedHelpers.findAndHookMethod(
-                PACKAGE + ".ui.ComposeMessageActivity",
-                lpparam.classLoader,
-                "onCreate",
-                Bundle.class,
-
-                new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        /*rightButtonsLand.setOrientation(LinearLayout.HORIZONTAL);
-                        rightButtonsPort.setOrientation(LinearLayout.HORIZONTAL);*/
-                    }
-                }
-        );
-
         ArrayList<String> classes = new ArrayList<String>();
 
         classes.add(PACKAGE + ".ui.ConversationList");
