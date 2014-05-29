@@ -96,21 +96,6 @@ public class LGMessenger {
                     }
                 }
         );
-
-        /*XposedHelpers.findAndHookMethod(
-                "android.app.Activity",
-                null,
-                "onCreate",
-                Bundle.class,
-
-                new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        Toast.makeText((Activity) param.thisObject,
-                                ((Activity) param.thisObject).getClass().getName(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );*/
     }
 
     public static void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
