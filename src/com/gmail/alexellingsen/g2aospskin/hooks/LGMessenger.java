@@ -2,15 +2,12 @@ package com.gmail.alexellingsen.g2aospskin.hooks;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,18 +56,8 @@ public class LGMessenger {
                                         param.args[0] = null;
                                     }
                                 }
-                            } else if (param.thisObject instanceof EditText) {
-                                if (param.thisObject.getClass().getName().contains("ExEditText")) {
-                                    EditText thiz = (EditText) param.thisObject;
-                                    Context context = thiz.getContext();
-
-                                    TypedArray a = context.getTheme().obtainStyledAttributes(android.R.style.Theme_Holo_Light, new int[]{android.R.attr.editTextBackground});
-                                    int attributeResourceId = a.getResourceId(0, android.R.drawable.edit_text);
-                                    Drawable drawable = context.getResources().getDrawable(attributeResourceId);
-                                    a.recycle();
-
-                                    param.args[0] = drawable;
-                                }
+                            } else if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText")) {
+                                param.args[0] = null;
                             }
                         }
                     }
@@ -85,18 +72,8 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            if (param.thisObject instanceof EditText) {
-                                if (param.thisObject.getClass().getName().contains("ExEditText")) {
-                                    EditText thiz = (EditText) param.thisObject;
-                                    Context context = thiz.getContext();
-
-                                    TypedArray a = context.getTheme().obtainStyledAttributes(android.R.style.Theme_Holo_Light, new int[]{android.R.attr.editTextBackground});
-                                    int attributeResourceId = a.getResourceId(0, android.R.drawable.edit_text);
-                                    Drawable drawable = context.getResources().getDrawable(attributeResourceId);
-                                    a.recycle();
-
-                                    param.args[0] = drawable;
-                                }
+                            if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText")) {
+                                param.args[0] = null;
                             }
                         }
                     }
