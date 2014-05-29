@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.content.res.XModuleResources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.gmail.alexellingsen.g2aospskin.R;
 import de.robv.android.xposed.IXposedHookZygoteInit.StartupParam;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -162,7 +165,25 @@ public class LGMessenger {
             }
         });
 
-        XposedBridge.log("Hooked 'compose_bottom_button_area_right'");
+        resparam.res.hookLayout(PACKAGE, "layout", "compose_message_activity_header", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                int[] identifiers = new int[]{
+                        liparam.res.getIdentifier("title", "id", PACKAGE),
+                        liparam.res.getIdentifier("subtitle", "id", PACKAGE),
+                        liparam.res.getIdentifier("subtitle2", "id", PACKAGE)
+                };
+
+                for (int id : identifiers) {
+                    ((TextView) liparam.view.findViewById(id)).setTextColor(Color.BLACK);
+                }
+            }
+        });
+
+        resparam.res.setReplacement(PACKAGE, "drawable", "ic_add", mModRes.fwd(R.drawable.ic_action_content_new));
+        resparam.res.setReplacement(PACKAGE, "drawable", "ic_menu_add", mModRes.fwd(R.drawable.ic_action_content_new));
+        resparam.res.setReplacement(PACKAGE, "drawable", "ic_menu_call", mModRes.fwd(R.drawable.ic_action_device_access_call));
+        resparam.res.setReplacement(PACKAGE, "drawable", "ic_menu_composemsg", mModRes.fwd(R.drawable.ic_action_content_new_email));
     }
 
     public static void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
