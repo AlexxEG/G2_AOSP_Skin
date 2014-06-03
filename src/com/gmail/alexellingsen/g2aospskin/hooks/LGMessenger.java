@@ -91,7 +91,7 @@ public class LGMessenger {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         if (param.thisObject.getClass().getPackage().getName().contains("com.android.mms.ui")) {
-                            param.args[0] = android.R.style.Theme_Holo_Light;
+                            param.args[0] = android.R.style.Theme_Holo_Light_DarkActionBar;
                         }
                     }
                 }
@@ -110,21 +110,6 @@ public class LGMessenger {
                         liparam.res.getIdentifier("msg_list_title_bar_shadow_img", "id", PACKAGE)
                 );
                 conversationShadow.setVisibility(View.GONE);
-            }
-        });
-
-        resparam.res.hookLayout(PACKAGE, "layout", "compose_message_activity_header", new XC_LayoutInflated() {
-            @Override
-            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                int[] identifiers = new int[]{
-                        liparam.res.getIdentifier("title", "id", PACKAGE),
-                        liparam.res.getIdentifier("subtitle", "id", PACKAGE),
-                        liparam.res.getIdentifier("subtitle2", "id", PACKAGE)
-                };
-
-                for (int id : identifiers) {
-                    ((TextView) liparam.view.findViewById(id)).setTextColor(Color.BLACK);
-                }
             }
         });
 
@@ -171,7 +156,7 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            ((Activity) param.thisObject).setTheme(android.R.style.Theme_Holo_Light);
+                            ((Activity) param.thisObject).setTheme(android.R.style.Theme_Holo_Light_DarkActionBar);
                         }
                     }
             );
@@ -181,21 +166,8 @@ public class LGMessenger {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 param.args[0] = new ContextThemeWrapper((android.content.Context) param.args[0],
-                        android.R.style.Theme_Holo_Light);
+                        android.R.style.Theme_Holo_Light_DarkActionBar);
             }
-
-            /*@Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                EditText thiz = (EditText) param.thisObject;
-                Context context = thiz.getContext();
-
-                TypedArray a = context.getTheme().obtainStyledAttributes(android.R.style.Theme_Holo_Light, new int[]{android.R.attr.editTextBackground});
-                int attributeResourceId = a.getResourceId(0, android.R.drawable.edit_text);
-                Drawable drawable = context.getResources().getDrawable(attributeResourceId);
-                a.recycle();
-
-                thiz.setBackground(drawable);
-            }*/
         };
 
         XposedHelpers.findAndHookConstructor(
