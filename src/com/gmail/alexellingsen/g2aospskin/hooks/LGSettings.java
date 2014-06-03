@@ -113,6 +113,10 @@ public class LGSettings {
         mModRes = modRes;
 
         Icons.replace(resparam);
+
+        // Replace WiFi signal icons
+        resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_open", mModRes.fwd(R.drawable.wifi_signal_open));
+        resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_lock", mModRes.fwd(R.drawable.wifi_signal_lock));
     }
 
     public static void handleLoadPackage(LoadPackageParam lpparam) {
