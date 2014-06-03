@@ -3,7 +3,6 @@ package com.gmail.alexellingsen.g2aospskin.hooks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XModuleResources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.R;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -28,10 +26,8 @@ public class LGMessenger {
     private static final String PACKAGE = "com.android.mms";
 
     private static XModuleResources mModRes;
-
-    private static int ID = -1;
-
-    private static ImageView conversationShadow;
+    private static int mID = -1;
+    private static ImageView mConversationShadow;
 
     public static void init(XModuleResources modRes) throws Throwable {
         mModRes = modRes;
@@ -51,7 +47,7 @@ public class LGMessenger {
                                 Context context = thiz.getContext();
 
                                 if (context.getClass().getName().equals("com.android.mms.ui.ComposeMessageActivity")) {
-                                    if (ID != -1 && thiz.getId() == ID) {
+                                    if (mID != -1 && thiz.getId() == mID) {
                                         param.args[0] = null;
                                     }
                                 }
@@ -106,10 +102,10 @@ public class LGMessenger {
         resparam.res.hookLayout(PACKAGE, "layout", "conversation_list_screen", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                conversationShadow = (ImageView) liparam.view.findViewById(
+                mConversationShadow = (ImageView) liparam.view.findViewById(
                         liparam.res.getIdentifier("msg_list_title_bar_shadow_img", "id", PACKAGE)
                 );
-                conversationShadow.setVisibility(View.GONE);
+                mConversationShadow.setVisibility(View.GONE);
             }
         });
 
@@ -134,7 +130,7 @@ public class LGMessenger {
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         ViewGroup view = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mEditTextLayout");
 
-                        ID = view.getId();
+                        mID = view.getId();
                     }
                 }
         );
