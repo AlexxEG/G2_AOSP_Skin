@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class LGMessenger {
 
-    private static final String PACKAGE = "com.android.mms";
+    public static final String PACKAGE = "com.android.mms";
 
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;

@@ -1,9 +1,18 @@
 package com.gmail.alexellingsen.g2aospskin;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
+import com.gmail.alexellingsen.g2aospskin.hooks.LGMessenger;
+import com.gmail.alexellingsen.g2aospskin.hooks.LGSettings;
+import com.gmail.alexellingsen.g2aospskin.utils.RootFunctions;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 
 public class MainActivity extends PreferenceActivity {
@@ -34,6 +43,62 @@ public class MainActivity extends PreferenceActivity {
             prefMgr.setSharedPreferencesMode(MODE_WORLD_READABLE);
 
             addPreferencesFromResource(R.xml.preferences);
+
+            Preference pMessenger = findPreference(Prefs.AOSP_THEME_LG_MESSENGER);
+            Preference pSettings = findPreference(Prefs.AOSP_THEME_SETTINGS);
+
+            pMessenger.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    killApp(LGMessenger.PACKAGE);
+                    return true;
+                }
+            });
+
+            pSettings.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    killApp(LGSettings.PACKAGE);
+                    return true;
+                }
+            });
+        }
+
+        private void killApp(String packageName) {
+            if (mSettings.getBoolean(Prefs.KILL_APP_DONT_ASK_AGAIN, false)) {
+                RootFunctions.killApp(packageName);
+            } else {
+                showKillAppConfirmation(packageName);
+            }
+        }
+
+        private void showKillAppConfirmation(final String packageName) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(R.layout.alert_dialog_checkbox, null);
+            final CheckBox dontAskAgain = (CheckBox) view.findViewById(R.id.chb_dont_ask_again);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle("Kill App")
+                    .setMessage("Do you want to kill the app so it can apply the new theme?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mSettings.putBoolean(Prefs.KILL_APP_DONT_ASK_AGAIN, dontAskAgain.isChecked());
+                            RootFunctions.killApp(packageName);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setView(view);
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
         }
     }
 }

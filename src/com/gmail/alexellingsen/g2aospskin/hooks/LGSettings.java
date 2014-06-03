@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class LGSettings {
 
-    private static final String PACKAGE = "com.android.settings";
+    public static final String PACKAGE = "com.android.settings";
 
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;

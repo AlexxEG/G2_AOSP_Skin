@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class LGEasySettings {
 
-    private static final String PACKAGE = "com.lge.settings.easy";
+    public static final String PACKAGE = "com.lge.settings.easy";
 
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;
