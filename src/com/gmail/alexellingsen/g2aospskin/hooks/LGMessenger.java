@@ -46,10 +46,8 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
-                                return;
-
-                            if (param.thisObject instanceof LinearLayout) {
+                            if (param.thisObject instanceof LinearLayout &&
+                                    mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false)) {
                                 LinearLayout thiz = (LinearLayout) param.thisObject;
                                 Context context = thiz.getContext();
 
@@ -58,7 +56,8 @@ public class LGMessenger {
                                         param.args[0] = null;
                                     }
                                 }
-                            } else if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText")) {
+                            } else if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText") &&
+                                    mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false)) {
                                 param.args[0] = null;
                             }
                         }
@@ -74,10 +73,8 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
-                                return;
-
-                            if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText")) {
+                            if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText") &&
+                                    mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false)) {
                                 param.args[0] = null;
                             }
                         }
@@ -96,10 +93,8 @@ public class LGMessenger {
                 new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
-                            return;
-
-                        if (param.thisObject.getClass().getPackage().getName().contains("com.android.mms.ui")) {
+                        if (param.thisObject.getClass().getPackage().getName().contains("com.android.mms.ui") &&
+                                mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false)) {
                             param.args[0] = android.R.style.Theme_Holo_Light_DarkActionBar;
                         }
                     }
