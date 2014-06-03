@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
+import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -26,11 +28,13 @@ public class LGMessenger {
     private static final String PACKAGE = "com.android.mms";
 
     private static XModuleResources mModRes;
+    private static SettingsHelper mSettings;
     private static int mID = -1;
     private static ImageView mConversationShadow;
 
-    public static void init(XModuleResources modRes) throws Throwable {
+    public static void init(final SettingsHelper settings, XModuleResources modRes) throws Throwable {
         mModRes = modRes;
+        mSettings = settings;
 
         try {
             XposedHelpers.findAndHookMethod(
@@ -42,6 +46,9 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
+                                return;
+
                             if (param.thisObject instanceof LinearLayout) {
                                 LinearLayout thiz = (LinearLayout) param.thisObject;
                                 Context context = thiz.getContext();
@@ -67,6 +74,9 @@ public class LGMessenger {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
+                                return;
+
                             if (param.thisObject.getClass().getName().equals("com.android.mms.pinchApi.ExEditText")) {
                                 param.args[0] = null;
                             }
@@ -86,6 +96,9 @@ public class LGMessenger {
                 new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
+                            return;
+
                         if (param.thisObject.getClass().getPackage().getName().contains("com.android.mms.ui")) {
                             param.args[0] = android.R.style.Theme_Holo_Light_DarkActionBar;
                         }
@@ -98,6 +111,9 @@ public class LGMessenger {
         if (!resparam.packageName.equals(PACKAGE)) {
             return;
         }
+
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
+            return;
 
         resparam.res.hookLayout(PACKAGE, "layout", "conversation_list_screen", new XC_LayoutInflated() {
             @Override
@@ -119,6 +135,9 @@ public class LGMessenger {
         if (!lpparam.packageName.equals(PACKAGE)) {
             return;
         }
+
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_MESSENGER, false))
+            return;
 
         XposedHelpers.findAndHookMethod(
                 PACKAGE + ".ui.ComposeMessageFragment",

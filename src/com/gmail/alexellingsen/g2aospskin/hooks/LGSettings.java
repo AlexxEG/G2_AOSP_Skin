@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
@@ -47,6 +48,9 @@ public class LGSettings {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                             if (!param.thisObject.getClass().getName().contains("PowerSaveBatteryInfoPreference"))
+                                return;
+
+                            if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
                                 return;
 
                             XposedHelpers.callMethod(param.thisObject, "setIcon", new Class<?>[]{Drawable.class}, new Object[]{null});
@@ -85,7 +89,8 @@ public class LGSettings {
                         XposedBridge.log(context.getClass().getPackage().getName());
                         XposedBridge.log(context.getClass().getName());
 
-                        if (packagesList.contains(context.getClass().getPackage().getName())) {
+                        if (packagesList.contains(context.getClass().getPackage().getName()) &&
+                                mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false)) {
                             TypedArray a = context.getTheme().obtainStyledAttributes(
                                     android.R.style.Widget_Holo_ActionBar_Solid,
                                     new int[]{android.R.attr.background, android.R.attr.backgroundStacked});
@@ -112,6 +117,9 @@ public class LGSettings {
 
         mModRes = modRes;
 
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
+            return;
+
         Icons.replace(resparam);
 
         // Replace WiFi signal icons
@@ -123,6 +131,9 @@ public class LGSettings {
         if (!lpparam.packageName.equals(PACKAGE)) {
             return;
         }
+
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
+            return;
 
         XposedHelpers.findAndHookMethod(
                 "com.android.settings.powersave.PowerSaveBatteryInfoPreference",

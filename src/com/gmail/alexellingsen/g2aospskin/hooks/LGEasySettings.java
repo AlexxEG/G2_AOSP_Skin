@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.XModuleResources;
 import android.widget.TextView;
+import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
@@ -33,6 +34,9 @@ public class LGEasySettings {
 
         mModRes = modRes;
 
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
+            return;
+
         Icons.replace(resparam);
     }
 
@@ -40,6 +44,9 @@ public class LGEasySettings {
         if (!lpparam.packageName.equals(PACKAGE)) {
             return;
         }
+
+        if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
+            return;
 
         XposedBridge.log("Hooking 'createTabs'");
         XposedHelpers.findAndHookMethod(
