@@ -91,20 +91,29 @@ public class LGSettings {
 
                         if (packagesList.contains(context.getClass().getPackage().getName()) &&
                                 mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false)) {
-                            TypedArray a = context.getTheme().obtainStyledAttributes(
-                                    android.R.style.Widget_Holo_ActionBar_Solid,
-                                    new int[]{android.R.attr.background, android.R.attr.backgroundStacked});
-                            int attributeResourceId1 = a.getResourceId(0, -1);
-                            int attributeResourceId2 = a.getResourceId(1, -1);
-                            Drawable background = context.getResources().getDrawable(attributeResourceId1);
-                            Drawable backgroundStacked = context.getResources().getDrawable(attributeResourceId2);
-                            a.recycle();
+                            Drawable[] drawables = getDrawables(context);
 
-                            XposedHelpers.setObjectField(param.thisObject, "mBackground", background);
-                            XposedHelpers.setObjectField(param.thisObject, "mStackedBackground", backgroundStacked);
+                            XposedHelpers.setObjectField(param.thisObject, "mBackground", drawables[0]);
+                            XposedHelpers.setObjectField(param.thisObject, "mStackedBackground", drawables[1]);
                         }
 
                         XposedBridge.log("-");
+                    }
+
+                    private Drawable[] getDrawables(Context context) {
+                        TypedArray a = context.getTheme().obtainStyledAttributes(
+                                android.R.style.Widget_Holo_ActionBar_Solid,
+                                new int[]{android.R.attr.background, android.R.attr.backgroundStacked});
+
+                        int attributeResourceId1 = a.getResourceId(0, -1);
+                        int attributeResourceId2 = a.getResourceId(1, -1);
+
+                        Drawable background = context.getResources().getDrawable(attributeResourceId1);
+                        Drawable backgroundStacked = context.getResources().getDrawable(attributeResourceId2);
+
+                        a.recycle();
+
+                        return new Drawable[]{background, backgroundStacked};
                     }
                 }
         );
