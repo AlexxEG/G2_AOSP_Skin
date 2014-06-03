@@ -9,6 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
@@ -31,6 +35,29 @@ public class LGSettings {
 
     public static void init(SettingsHelper settings) {
         mSettings = settings;
+
+        try {
+            XposedHelpers.findAndHookMethod(
+                    "android.preference.Preference",
+                    null,
+                    "setIcon",
+                    int.class,
+
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if (!param.thisObject.getClass().getName().contains("PowerSaveBatteryInfoPreference"))
+                                return;
+
+                            XposedHelpers.callMethod(param.thisObject, "setIcon", new Class<?>[]{Drawable.class}, new Object[]{null});
+
+                            param.setResult(true);
+                        }
+                    }
+            );
+        } catch (Throwable e) {
+            XposedBridge.log(e);
+        }
 
         String[] packages = new String[]{
                 "com.android.settings",
@@ -93,6 +120,39 @@ public class LGSettings {
             return;
         }
 
+        XposedHelpers.findAndHookMethod(
+                "com.android.settings.powersave.PowerSaveBatteryInfoPreference",
+                lpparam.classLoader,
+                "onBindView",
+                View.class,
+
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        TextView tv = (TextView) XposedHelpers.getObjectField(param.thisObject, "mBatteryLevel");
+                        LinearLayout ll = (LinearLayout) tv.getParent();
+                        Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+                        float leftMargin = convertDpToPixels(15, context);
+
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
+
+                        params.setMargins((int) leftMargin,
+                                params.topMargin,
+                                params.rightMargin,
+                                params.bottomMargin);
+
+                        ll.setLayoutParams(params);
+                    }
+
+                    private float convertDpToPixels(float dp, Context context) {
+                        Resources r = context.getResources();
+                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+
+                        return px;
+                    }
+                }
+        );
 
         final String[] activities = new String[]{
                 "com.android.settings.Settings",
