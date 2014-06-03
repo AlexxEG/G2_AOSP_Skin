@@ -78,9 +78,9 @@ public class MainActivity extends PreferenceActivity {
             final CheckBox dontAskAgain = (CheckBox) view.findViewById(R.id.chb_dont_ask_again);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                    .setTitle("Kill App")
-                    .setMessage("Do you want to kill the app so it can apply the new theme?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.title_kill_app))
+                    .setMessage(getString(R.string.message_kill_app))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mSettings.putBoolean(Prefs.KILL_APP_DONT_ASK_AGAIN, dontAskAgain.isChecked());
@@ -88,7 +88,7 @@ public class MainActivity extends PreferenceActivity {
                             dialog.dismiss();
                         }
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();

@@ -11,6 +11,6 @@
         android:id="@+id/chb_dont_ask_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't ask again"/>
+        android:text="@string/dialog_dont_ask_again"/>
 
 </LinearLayout>
