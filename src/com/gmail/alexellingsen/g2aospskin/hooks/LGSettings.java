@@ -253,6 +253,7 @@ public class LGSettings {
                 put("ic_guestmode", R.drawable.ic_guestmode);
                 put("ic_home_white", R.drawable.ic_home_white);
                 put("ic_lockscreen_white", R.drawable.ic_lockscreen_white);
+                put("ic_launcher_tap_pay", R.drawable.ic_settings_nfc_payment);
                 put("ic_multi_user", R.drawable.ic_multi_user);
                 put("ic_network", R.drawable.ic_network);
                 put("ic_notification_led", R.drawable.ic_notification_led);
@@ -277,6 +278,7 @@ public class LGSettings {
                 put("ic_settings_language", R.drawable.ic_settings_language);
                 put("ic_settings_location", R.drawable.ic_settings_location);
                 put("ic_settings_multitasking", R.drawable.ic_settings_multitasking);
+                put("ic_settings_multitasking_splitview", R.drawable.ic_settings_multitasking);
                 put("ic_settings_multitasking_splitview_list", R.drawable.ic_settings_multitasking);
                 put("ic_settings_nfc_payment", R.drawable.ic_settings_nfc_payment);
                 put("ic_settings_security", R.drawable.ic_settings_security);
@@ -293,10 +295,12 @@ public class LGSettings {
                 put("shortcut_accessibility", R.drawable.shortcut_accessibility);
                 put("shortcut_accessory", R.drawable.shortcut_accessory);
                 put("shortcut_account", R.drawable.shortcut_account);
+                put("shortcut_alarm", R.drawable.ic_settings_date_time);
                 put("shortcut_apps", R.drawable.shortcut_apps);
                 put("shortcut_backup_reset", R.drawable.shortcut_backup_reset);
                 put("shortcut_battery", R.drawable.shortcut_battery);
                 put("shortcut_bluetooth", R.drawable.shortcut_bluetooth);
+                put("shortcut_connectivity", R.drawable.connectivity);
                 put("shortcut_data_usage", R.drawable.shortcut_data_usage);
                 put("shortcut_develops", R.drawable.shortcut_develops);
                 put("shortcut_display", R.drawable.shortcut_display);
