@@ -6,11 +6,12 @@
 
         <CheckBoxPreference
             android:key="pref_aosp_theme_lg_messenger"
-            android:title="LG Messenger"/>
+            android:enabled="false"
+            android:title="@string/pref_lg_messenger"/>
 
         <CheckBoxPreference
             android:key="pref_aosp_theme_settings"
-            android:title="Settings"/>
+            android:title="@string/pref_settings"/>
 
     </PreferenceCategory>
 
