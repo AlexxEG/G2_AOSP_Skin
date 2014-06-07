@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.XResources;
 import android.view.ContextThemeWrapper;
+import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -23,6 +24,9 @@ public class LGAlertDialog {
     public static void init(SettingsHelper settings) {
         mSettings = settings;
 
+        mDialogStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog", "style", PACKAGE_NAME_LGE);
+        mDialogAlertStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog.Alert", "style", PACKAGE_NAME_LGE);
+
         try {
             XposedHelpers.findAndHookMethod(
                     "android.app.AlertDialog$Builder",
@@ -34,6 +38,9 @@ public class LGAlertDialog {
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                             // Set window background to transparent on LG dialogs.
                             if (mIsLGDialog) {
+                                if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_DIALOG, false))
+                                    return;
+
                                 AlertDialog dialog = (AlertDialog) param.getResult();
 
                                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -50,6 +57,9 @@ public class LGAlertDialog {
                                 Context context = (Context) XposedHelpers.getObjectField(alertParams, "mContext");
 
                                 if (theme == mDialogStyleLGE || theme == mDialogAlertStyleLGE) {
+                                    if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_DIALOG, false))
+                                        return;
+
                                     Context newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog);
 
                                     XposedHelpers.setObjectField(alertParams, "mContext", newContext);
@@ -64,9 +74,6 @@ public class LGAlertDialog {
             );
         } catch (Throwable ignored) {
         }
-
-        mDialogStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog", "style", PACKAGE_NAME_LGE);
-        mDialogAlertStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog.Alert", "style", PACKAGE_NAME_LGE);
     }
 
     public static void handleLoadPackage(LoadPackageParam lpparam) {

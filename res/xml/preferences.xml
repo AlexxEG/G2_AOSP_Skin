@@ -5,6 +5,11 @@
     <PreferenceCategory android:title="Enable AOSP like theme for...">
 
         <CheckBoxPreference
+            android:key="pref_aosp_theme_dialog"
+            android:summary="@string/pref_dialog_summary"
+            android:title="@string/pref_dialog"/>
+
+        <CheckBoxPreference
             android:key="pref_aosp_theme_power_menu"
             android:summary="@string/pref_power_menu_summary"
             android:title="@string/pref_power_menu"/>
