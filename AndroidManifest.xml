@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="com.gmail.alexellingsen.g2aospskin"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="1"
+    android:versionName="0.1">
 
-    <uses-sdk android:minSdkVersion="16"/>
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="19"/>
 
     <application
         android:allowBackup="true"
