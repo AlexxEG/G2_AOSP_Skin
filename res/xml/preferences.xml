@@ -10,6 +10,11 @@
             android:title="@string/pref_lg_messenger"/>
 
         <CheckBoxPreference
+            android:key="pref_aosp_theme_power_menu"
+            android:summary="@string/pref_power_menu_summary"
+            android:title="@string/pref_power_menu"/>
+
+        <CheckBoxPreference
             android:key="pref_aosp_theme_settings"
             android:title="@string/pref_settings"/>
 
