@@ -16,12 +16,17 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
     private static SettingsHelper mSettings;
 
     @Override
-    public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
-        LGAlertDialog.handleInitPackageResources(resparam);
-        LGEasySettings.handleInitPackageResources(resparam);
-        LGMessenger.handleInitPackageResources(resparam);
-        LGSettings.handleInitPackageResources(resparam);
-        PowerMenu.handleInitPackageResources(resparam);
+    public void initZygote(StartupParam startupParam) throws Throwable {
+        MODULE_PATH = startupParam.modulePath;
+        mSettings = new SettingsHelper();
+
+        XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, null);
+
+        LGAlertDialog.init(mSettings);
+        LGEasySettings.init(mSettings, modRes);
+        LGMessenger.init(mSettings, modRes);
+        LGSettings.init(mSettings, modRes);
+        PowerMenu.init(mSettings, modRes);
     }
 
     @Override
@@ -34,16 +39,11 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
     }
 
     @Override
-    public void initZygote(StartupParam startupParam) throws Throwable {
-        MODULE_PATH = startupParam.modulePath;
-        mSettings = new SettingsHelper();
-
-        XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, null);
-
-        LGAlertDialog.init(mSettings);
-        LGEasySettings.init(mSettings, modRes);
-        LGMessenger.init(mSettings, modRes);
-        LGSettings.init(mSettings, modRes);
-        PowerMenu.init(mSettings, modRes);
+    public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
+        LGAlertDialog.handleInitPackageResources(resparam);
+        LGEasySettings.handleInitPackageResources(resparam);
+        LGMessenger.handleInitPackageResources(resparam);
+        LGSettings.handleInitPackageResources(resparam);
+        PowerMenu.handleInitPackageResources(resparam);
     }
 }
