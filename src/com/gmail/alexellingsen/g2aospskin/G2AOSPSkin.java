@@ -1,10 +1,7 @@
 package com.gmail.alexellingsen.g2aospskin;
 
 import android.content.res.XModuleResources;
-import com.gmail.alexellingsen.g2aospskin.hooks.LGEasySettings;
-import com.gmail.alexellingsen.g2aospskin.hooks.LGMessenger;
-import com.gmail.alexellingsen.g2aospskin.hooks.LGSettings;
-import com.gmail.alexellingsen.g2aospskin.hooks.PowerMenu;
+import com.gmail.alexellingsen.g2aospskin.hooks.*;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -22,6 +19,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
     public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
         XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 
+        LGAlertDialog.handleInitPackageResources(resparam);
         LGEasySettings.handleInitPackageResources(resparam, modRes);
         LGMessenger.handleInitPackageResources(resparam);
         LGSettings.handleInitPackageResources(resparam, modRes);
@@ -30,6 +28,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+        LGAlertDialog.handleLoadPackage(lpparam);
         LGEasySettings.handleLoadPackage(lpparam);
         LGMessenger.handleLoadPackage(lpparam);
         LGSettings.handleLoadPackage(lpparam);
@@ -43,6 +42,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, null);
 
+        LGAlertDialog.init(mSettings);
         LGEasySettings.init(mSettings);
         LGMessenger.init(mSettings, modRes);
         LGSettings.init(mSettings);
