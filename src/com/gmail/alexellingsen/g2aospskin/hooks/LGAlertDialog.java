@@ -62,10 +62,11 @@ public class LGAlertDialog {
                                     if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_DIALOG, false))
                                         return;
 
-                                    Context newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog);
+                                    int newTheme = android.R.style.Theme_Holo_Light_Dialog;
+                                    Context newContext = new ContextThemeWrapper(context, newTheme);
 
                                     XposedHelpers.setObjectField(alertParams, "mContext", newContext);
-                                    XposedHelpers.setIntField(param.thisObject, "mTheme", android.R.style.Theme_Holo_Light_Dialog);
+                                    XposedHelpers.setIntField(param.thisObject, "mTheme", newTheme);
 
                                     mIsLGDialog = true;
                                 }
