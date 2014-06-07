@@ -46,6 +46,6 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGEasySettings.init(mSettings);
         LGMessenger.init(mSettings, modRes);
         LGSettings.init(mSettings);
-        PowerMenu.init(modRes);
+        PowerMenu.init(modRes, mSettings);
     }
 }
