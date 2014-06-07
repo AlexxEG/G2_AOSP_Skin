@@ -12,7 +12,7 @@
         <CheckBoxPreference
             android:key="pref_aosp_theme_settings"
             android:title="@string/pref_settings"/>
-        
+
     </PreferenceCategory>
 
 </PreferenceScreen>

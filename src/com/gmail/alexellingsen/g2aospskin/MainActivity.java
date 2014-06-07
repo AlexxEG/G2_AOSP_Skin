@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import com.gmail.alexellingsen.g2aospskin.hooks.LGMessenger;
 import com.gmail.alexellingsen.g2aospskin.hooks.LGSettings;
 import com.gmail.alexellingsen.g2aospskin.utils.RootFunctions;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
@@ -44,16 +43,7 @@ public class MainActivity extends PreferenceActivity {
 
             addPreferencesFromResource(R.xml.preferences);
 
-            Preference pMessenger = findPreference(Prefs.AOSP_THEME_LG_MESSENGER);
             Preference pSettings = findPreference(Prefs.AOSP_THEME_SETTINGS);
-
-            pMessenger.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    killApp(LGMessenger.PACKAGE);
-                    return true;
-                }
-            });
 
             pSettings.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
