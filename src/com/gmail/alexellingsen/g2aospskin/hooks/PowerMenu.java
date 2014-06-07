@@ -22,6 +22,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class PowerMenu {
 
     public static final String PACKAGE_NAME = "android";
+    public static final String PACKAGE_NAME_LGE = "com.lge.internal";
     public static final String PACKAGE_NAME_UI = "com.lge.provider.systemui";
 
     private static SettingsHelper mSettings;
@@ -29,10 +30,9 @@ public class PowerMenu {
     public static void init(XModuleResources modRes, SettingsHelper settings) {
         mSettings = settings;
 
-
         if (mSettings.getBoolean(Prefs.AOSP_THEME_POWER_MENU, false)) {
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_power_off", modRes.fwd(R.drawable.ic_lock_power_off));
-            XResources.setSystemWideReplacement("com.lge.internal", "drawable", "ic_lock_restart", modRes.fwd(R.drawable.ic_lock_reboot));
+            XResources.setSystemWideReplacement(PACKAGE_NAME_LGE, "drawable", "ic_lock_restart", modRes.fwd(R.drawable.ic_lock_reboot));
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_airplane_mode", modRes.fwd(R.drawable.ic_lock_airplane_mode));
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_airplane_mode_off", modRes.fwd(R.drawable.ic_lock_airplane_mode_off));
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_audio_vol_mute", modRes.fwd(R.drawable.ic_audio_vol_mute));
