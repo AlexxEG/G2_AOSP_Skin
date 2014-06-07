@@ -63,7 +63,6 @@ public class LGAlertDialog {
                     }
             );
         } catch (Throwable ignored) {
-
         }
 
         mDialogStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog", "style", PACKAGE_NAME_LGE);
