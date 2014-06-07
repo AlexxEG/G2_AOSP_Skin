@@ -171,9 +171,8 @@ public class LGSettings {
 
                     private float convertDpToPixels(float dp, Context context) {
                         Resources r = context.getResources();
-                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
 
-                        return px;
+                        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
                     }
                 }
         );
