@@ -5,11 +5,6 @@
     <PreferenceCategory android:title="Enable AOSP like theme for...">
 
         <CheckBoxPreference
-            android:key="pref_aosp_theme_lg_messenger"
-            android:enabled="false"
-            android:title="@string/pref_lg_messenger"/>
-
-        <CheckBoxPreference
             android:key="pref_aosp_theme_power_menu"
             android:summary="@string/pref_power_menu_summary"
             android:title="@string/pref_power_menu"/>
@@ -17,6 +12,12 @@
         <CheckBoxPreference
             android:key="pref_aosp_theme_settings"
             android:title="@string/pref_settings"/>
+
+        <CheckBoxPreference
+            android:key="pref_aosp_theme_lg_messenger"
+            android:enabled="false"
+            android:visibility="gone"
+            android:title="@string/pref_lg_messenger"/>
 
     </PreferenceCategory>
 
