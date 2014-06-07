@@ -14,6 +14,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class LGAlertDialog {
 
     public static final String PACKAGE_NAME_LGE = "com.lge.internal";
+    public static final String THEME_LGE_DIALOG = "Theme.LGE.Default.Dialog";
+    public static final String THEME_LGE_DIALOG_ALERT = "Theme.LGE.Default.Dialog.Alert";
 
     private static SettingsHelper mSettings;
     private static int mDialogStyleLGE;
@@ -24,8 +26,8 @@ public class LGAlertDialog {
     public static void init(SettingsHelper settings) {
         mSettings = settings;
 
-        mDialogStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog", "style", PACKAGE_NAME_LGE);
-        mDialogAlertStyleLGE = XResources.getSystem().getIdentifier("Theme.LGE.Default.Dialog.Alert", "style", PACKAGE_NAME_LGE);
+        mDialogStyleLGE = XResources.getSystem().getIdentifier(THEME_LGE_DIALOG, "style", PACKAGE_NAME_LGE);
+        mDialogAlertStyleLGE = XResources.getSystem().getIdentifier(THEME_LGE_DIALOG_ALERT, "style", PACKAGE_NAME_LGE);
 
         try {
             XposedHelpers.findAndHookMethod(
