@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">G2 AOSP Skin</string>
     <string name="dialog_dont_ask_again">Don\'t ask again</string>
-    <string name="message_kill_app">Do you want to kill the app so it can apply the new theme?</string>
+    <string name="message_kill_app">Do you want to kill the app so it can apply the new theme? (Root required)</string>
     <string name="pref_lg_messenger">LG Messenger</string>
     <string name="pref_power_menu">Power/Reboot Menu</string>
+    <string name="pref_power_menu_summary">Requires reboot.</string>
     <string name="pref_settings">Settings</string>
     <string name="title_kill_app">Kill App</string>
-    <string name="pref_power_menu_summary">Requires reboot.</string>
 </resources>
