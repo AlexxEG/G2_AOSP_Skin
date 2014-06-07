@@ -7,10 +7,8 @@ import android.content.res.XModuleResources;
 import android.content.res.XResources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.Prefs;
@@ -24,6 +22,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class PowerMenu {
 
     public static final String PACKAGE_NAME = "android";
+    public static final String PACKAGE_NAME_UI = "com.lge.provider.systemui";
 
     private static SettingsHelper mSettings;
 
@@ -47,7 +46,8 @@ public class PowerMenu {
     }
 
     public static void handleLoadPackage(final LoadPackageParam lpparam) {
-        if (!lpparam.packageName.equals(PACKAGE_NAME))
+        if (!lpparam.packageName.equals(PACKAGE_NAME) &&
+                !lpparam.packageName.equals(PACKAGE_NAME_UI))
             return;
 
         // No need to do the hooks if option is not enabled, especially because a reboot
@@ -56,85 +56,106 @@ public class PowerMenu {
             return;
         }
 
-        XposedHelpers.findAndHookConstructor(
-                "com.android.internal.policy.impl.GlobalActions$GlobalActionsDialog",
-                lpparam.classLoader,
-                Context.class,
-                "com.android.internal.app.AlertController.AlertParams",
+        if (lpparam.packageName.equals(PACKAGE_NAME)) {
+            XposedHelpers.findAndHookConstructor(
+                    "com.android.internal.policy.impl.GlobalActions$GlobalActionsDialog",
+                    lpparam.classLoader,
+                    Context.class,
+                    "com.android.internal.app.AlertController.AlertParams",
 
-                new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        Context context = (Context) param.args[0];
-                        ContextThemeWrapper newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog);
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            Context context = (Context) param.args[0];
+                            ContextThemeWrapper newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog);
 
-                        // Set new context with with AOSP style.
-                        param.args[0] = newContext;
+                            // Set new context with with AOSP style.
+                            param.args[0] = newContext;
+                        }
                     }
-                }
-        );
+            );
 
-        XposedHelpers.findAndHookMethod(
-                "com.android.internal.policy.impl.GlobalActions$GlobalActionsDialog",
-                lpparam.classLoader,
-                "onCreate",
-                Bundle.class,
+            XposedHelpers.findAndHookMethod(
+                    "com.android.internal.policy.impl.GlobalActions$GlobalActionsDialog",
+                    lpparam.classLoader,
+                    "onCreate",
+                    Bundle.class,
 
-                new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        Dialog dialog = (Dialog) param.thisObject;
-                        Context context = (Context) XposedHelpers.getObjectField(dialog, "mContext");
-                        Resources resources = context.getResources();
-                        ListView lv = (ListView) XposedHelpers.callMethod(param.thisObject, "getListView");
+                    new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            Dialog dialog = (Dialog) param.thisObject;
+                            Context context = (Context) XposedHelpers.getObjectField(dialog, "mContext");
+                            Resources resources = context.getResources();
+                            ListView lv = (ListView) XposedHelpers.callMethod(param.thisObject, "getListView");
 
-                        // Set the divider to a lighter variant.
-                        lv.setDivider(resources.getDrawable(android.R.drawable.divider_horizontal_dark));
+                            // Set the divider to a lighter variant.
+                            lv.setDivider(resources.getDrawable(android.R.drawable.divider_horizontal_dark));
+                        }
                     }
+            );
+
+            // Set the text color & font of each item in dialog.
+            XC_MethodHook fixTextHook = new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    Context context = (Context) param.args[0];
+                    View view = (View) param.getResult();
+                    Resources resources = context.getResources();
+
+                    TextView textMessage = (TextView) view.findViewById(
+                            resources.getIdentifier("message", "id", PACKAGE_NAME)
+                    );
+
+                    int color = resources.getColor(android.R.color.primary_text_dark);
+
+                    textMessage.setTextColor(color);
+                    textMessage.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
                 }
-        );
+            };
 
-        // Set the text color & font of each item in dialog.
-        XC_MethodHook fixTextHook = new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Context context = (Context) param.args[0];
-                View view = (View) param.getResult();
-                Resources resources = context.getResources();
+            XposedHelpers.findAndHookMethod(
+                    "com.android.internal.policy.impl.GlobalActions$SinglePressAction",
+                    lpparam.classLoader,
+                    "create",
+                    Context.class,
+                    View.class,
+                    ViewGroup.class,
+                    LayoutInflater.class,
 
-                TextView textMessage = (TextView) view.findViewById(
-                        resources.getIdentifier("message", "id", PACKAGE_NAME)
-                );
+                    fixTextHook
+            );
 
-                int color = resources.getColor(android.R.color.primary_text_dark);
+            XposedHelpers.findAndHookMethod(
+                    "com.android.internal.policy.impl.GlobalActions$ToggleAction",
+                    lpparam.classLoader,
+                    "create",
+                    Context.class,
+                    View.class,
+                    ViewGroup.class,
+                    LayoutInflater.class,
 
-                textMessage.setTextColor(color);
-                textMessage.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
-            }
-        };
+                    fixTextHook
+            );
+        } else if (lpparam.packageName.equals(PACKAGE_NAME_UI)) {
+            XposedHelpers.findAndHookMethod(
+                    "com.android.internal.app.AlertController",
+                    lpparam.classLoader,
+                    "setupTitle",
+                    LinearLayout.class,
 
-        XposedHelpers.findAndHookMethod(
-                "com.android.internal.policy.impl.GlobalActions$SinglePressAction",
-                lpparam.classLoader,
-                "create",
-                Context.class,
-                View.class,
-                ViewGroup.class,
-                LayoutInflater.class,
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            Window mWindow = (Window) XposedHelpers.getObjectField(param.thisObject, "mWindow");
 
-                fixTextHook
-        );
-
-        XposedHelpers.findAndHookMethod(
-                "com.android.internal.policy.impl.GlobalActions$ToggleAction",
-                lpparam.classLoader,
-                "create",
-                Context.class,
-                View.class,
-                ViewGroup.class,
-                LayoutInflater.class,
-
-                fixTextHook
-        );
+                            // Check for 'GlobalActions' title which should be the Power menu.
+                            if (mWindow.getAttributes().getTitle().equals("GlobalActions")) {
+                                XposedHelpers.setObjectField(param.thisObject, "mTitle", null);
+                            }
+                        }
+                    }
+            );
+        }
     }
 }
