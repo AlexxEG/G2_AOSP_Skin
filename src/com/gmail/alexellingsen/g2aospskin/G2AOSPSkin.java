@@ -17,13 +17,11 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
     @Override
     public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
-        XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
-
         LGAlertDialog.handleInitPackageResources(resparam);
-        LGEasySettings.handleInitPackageResources(resparam, modRes);
+        LGEasySettings.handleInitPackageResources(resparam);
         LGMessenger.handleInitPackageResources(resparam);
-        LGSettings.handleInitPackageResources(resparam, modRes);
-        PowerMenu.handleInitPackageResources(resparam, modRes);
+        LGSettings.handleInitPackageResources(resparam);
+        PowerMenu.handleInitPackageResources(resparam);
     }
 
     @Override
@@ -43,9 +41,9 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, null);
 
         LGAlertDialog.init(mSettings);
-        LGEasySettings.init(mSettings);
+        LGEasySettings.init(mSettings, modRes);
         LGMessenger.init(mSettings, modRes);
-        LGSettings.init(mSettings);
-        PowerMenu.init(modRes, mSettings);
+        LGSettings.init(mSettings, modRes);
+        PowerMenu.init(mSettings, modRes);
     }
 }

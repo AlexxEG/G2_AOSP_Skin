@@ -25,9 +25,11 @@ public class PowerMenu {
     public static final String PACKAGE_NAME_LGE = "com.lge.internal";
     public static final String PACKAGE_NAME_UI = "com.lge.provider.systemui";
 
+    private static XModuleResources mModRes;
     private static SettingsHelper mSettings;
 
-    public static void init(XModuleResources modRes, SettingsHelper settings) {
+    public static void init(SettingsHelper settings, XModuleResources modRes) {
+        mModRes = modRes;
         mSettings = settings;
 
         if (mSettings.getBoolean(Prefs.AOSP_THEME_POWER_MENU, false)) {
@@ -41,7 +43,7 @@ public class PowerMenu {
         }
     }
 
-    public static void handleInitPackageResources(final InitPackageResourcesParam resparam, XModuleResources modRes) {
+    public static void handleInitPackageResources(final InitPackageResourcesParam resparam) {
         // Not used yet
     }
 

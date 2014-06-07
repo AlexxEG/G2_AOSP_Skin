@@ -34,7 +34,8 @@ public class LGSettings {
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;
 
-    public static void init(SettingsHelper settings) {
+    public static void init(SettingsHelper settings, XModuleResources modRes) {
+        mModRes = modRes;
         mSettings = settings;
 
         try {
@@ -119,12 +120,10 @@ public class LGSettings {
         );
     }
 
-    public static void handleInitPackageResources(InitPackageResourcesParam resparam, XModuleResources modRes) {
+    public static void handleInitPackageResources(InitPackageResourcesParam resparam) {
         if (!resparam.packageName.equals(PACKAGE)) {
             return;
         }
-
-        mModRes = modRes;
 
         if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
             return;

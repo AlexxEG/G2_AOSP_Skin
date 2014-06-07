@@ -23,16 +23,15 @@ public class LGEasySettings {
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;
 
-    public static void init(SettingsHelper settings) {
+    public static void init(SettingsHelper settings, XModuleResources modRes) {
+        mModRes = modRes;
         mSettings = settings;
     }
 
-    public static void handleInitPackageResources(InitPackageResourcesParam resparam, XModuleResources modRes) {
+    public static void handleInitPackageResources(InitPackageResourcesParam resparam) {
         if (!resparam.packageName.equals(PACKAGE)) {
             return;
         }
-
-        mModRes = modRes;
 
         if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
             return;
