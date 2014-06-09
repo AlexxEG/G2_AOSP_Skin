@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
 import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
@@ -81,7 +81,7 @@ public class LGMessenger {
                     }
             );
         } catch (Throwable ignored) {
-            XposedBridge.log("Couldn't hook LinearLayout in init");
+            G2AOSPSkin.log("Couldn't hook LinearLayout in init");
         }
 
         XposedHelpers.findAndHookMethod(
@@ -207,6 +207,6 @@ public class LGMessenger {
                 hook
         );
 
-        XposedBridge.log("Hooked all constructors");
+        G2AOSPSkin.log("Hooked all constructors");
     }
 }

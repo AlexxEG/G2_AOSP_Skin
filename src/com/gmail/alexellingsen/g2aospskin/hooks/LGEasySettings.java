@@ -4,11 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.XModuleResources;
 import android.widget.TextView;
+import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
 import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -47,7 +47,7 @@ public class LGEasySettings {
         if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
             return;
 
-        XposedBridge.log("Hooking 'createTabs'");
+        G2AOSPSkin.log("Hooking 'createTabs'");
         XposedHelpers.findAndHookMethod(
                 PACKAGE + ".EasySettings",
                 lpparam.classLoader,
@@ -80,7 +80,7 @@ public class LGEasySettings {
                     }
                 }
         );
-        XposedBridge.log("Hooked 'createTabs'");
+        G2AOSPSkin.log("Hooked 'createTabs'");
     }
 
     private static class Icons {
@@ -169,7 +169,7 @@ public class LGEasySettings {
                 resparam.res.setReplacement(PACKAGE, "drawable", set.getKey(), mModRes.fwd(set.getValue()));
             }
 
-            XposedBridge.log("Replaced all icons");
+            G2AOSPSkin.log("Replaced all icons");
         }
     }
 }

@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
 import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
@@ -87,8 +88,8 @@ public class LGSettings {
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Context context = (Context) param.args[0];
 
-                        XposedBridge.log(context.getClass().getPackage().getName());
-                        XposedBridge.log(context.getClass().getName());
+                        G2AOSPSkin.log(context.getClass().getPackage().getName());
+                        G2AOSPSkin.log(context.getClass().getName());
 
                         if (packagesList.contains(context.getClass().getPackage().getName()) &&
                                 mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false)) {
@@ -98,7 +99,7 @@ public class LGSettings {
                             XposedHelpers.setObjectField(param.thisObject, "mStackedBackground", drawables[1]);
                         }
 
-                        XposedBridge.log("-");
+                        G2AOSPSkin.log("-");
                     }
 
                     private Drawable[] getDrawables(Context context) {
@@ -324,11 +325,11 @@ public class LGSettings {
                 try {
                     resparam.res.setReplacement(PACKAGE, "drawable", set.getKey(), mModRes.fwd(set.getValue()));
                 } catch (Resources.NotFoundException e) {
-                    XposedBridge.log("Couldn't find " + set.getKey());
+                    G2AOSPSkin.log("Couldn't find " + set.getKey());
                 }
             }
 
-            XposedBridge.log("Replaced all icons");
+            G2AOSPSkin.log("Replaced all icons");
         }
     }
 }

@@ -6,11 +6,15 @@ import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 @SuppressWarnings("UnusedDeclaration")
 public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
+
+    public static final boolean DEBUG = true;
+    public static final String TAG = "[G2AOSPSkin]";
 
     private static String MODULE_PATH = null;
     private static SettingsHelper mSettings;
@@ -27,6 +31,8 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGMessenger.init(mSettings, modRes);
         LGSettings.init(mSettings, modRes);
         PowerMenu.init(mSettings, modRes);
+
+        XposedBridge.log(TAG + " Debug enabled: " + DEBUG);
     }
 
     @Override
@@ -45,5 +51,17 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGMessenger.handleInitPackageResources(resparam);
         LGSettings.handleInitPackageResources(resparam);
         PowerMenu.handleInitPackageResources(resparam);
+    }
+
+    public static void log(String msg) {
+        if (DEBUG) {
+            XposedBridge.log(TAG + " " + msg);
+        }
+    }
+
+    public static void log(String tag, String msg) {
+        if (DEBUG) {
+            XposedBridge.log("[" + tag + "]" + " " + msg);
+        }
     }
 }
