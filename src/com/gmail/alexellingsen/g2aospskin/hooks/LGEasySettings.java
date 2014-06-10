@@ -9,6 +9,8 @@ import com.gmail.alexellingsen.g2aospskin.Prefs;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -81,6 +83,32 @@ public class LGEasySettings {
                 }
         );
         G2AOSPSkin.log("Hooked 'createTabs'");
+
+        fixFlexCustomViewTab(lpparam);
+    }
+
+    /**
+     * Disable the method that makes text in tabs bold when selected.
+     * Causes FC on some versions. (CloudyFlex/Flex?)
+     */
+    public static void fixFlexCustomViewTab(LoadPackageParam lpparam) {
+        try {
+            XposedHelpers.findAndHookMethod(
+                    "com.lge.settings.easy.EasySettings",
+                    lpparam.classLoader,
+                    "setTabViewUI",
+                    int.class,
+
+                    XC_MethodReplacement.DO_NOTHING
+            );
+        } catch (Throwable e) {
+            // Method doesn't exists, fix not needed.
+
+            if (G2AOSPSkin.DEBUG) {
+                G2AOSPSkin.log("None dangerous error:");
+                XposedBridge.log(e);
+            }
+        }
     }
 
     private static class Icons {
