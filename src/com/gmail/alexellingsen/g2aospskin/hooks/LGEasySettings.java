@@ -2,7 +2,10 @@ package com.gmail.alexellingsen.g2aospskin.hooks;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.XModuleResources;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
 import com.gmail.alexellingsen.g2aospskin.Prefs;
@@ -85,6 +88,7 @@ public class LGEasySettings {
         G2AOSPSkin.log("Hooked 'createTabs'");
 
         fixFlexCustomViewTab(lpparam);
+        fixPreferenceFont(lpparam);
     }
 
     /**
@@ -109,6 +113,42 @@ public class LGEasySettings {
                 XposedBridge.log(e);
             }
         }
+    }
+
+    public static void fixPreferenceFont(LoadPackageParam lpparam) {
+        XposedHelpers.findAndHookConstructor(
+                PACKAGE + ".EasySwitchPreference",
+                lpparam.classLoader,
+                Context.class,
+                AttributeSet.class,
+                int.class,
+
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        // Not sure if needed, but do it to be safe.
+                        param.args[2] = android.R.attr.preferenceStyle;
+                    }
+                }
+        );
+
+        XposedHelpers.findAndHookMethod(
+                PACKAGE + ".EasySwitchPreference",
+                lpparam.classLoader,
+                "onBindView",
+                View.class,
+
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        View view = (View) param.args[0];
+                        TextView textView = (TextView) view.findViewById(android.R.id.title);
+
+                        // Remove bold style
+                        textView.setTypeface(null, 0);
+                    }
+                }
+        );
     }
 
     private static class Icons {
