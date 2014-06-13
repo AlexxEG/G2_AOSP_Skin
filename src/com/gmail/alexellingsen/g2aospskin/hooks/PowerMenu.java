@@ -31,9 +31,14 @@ public class PowerMenu {
     private static DialogThemes mDialogTheme;
 
     public static void init(SettingsHelper settings, XModuleResources modRes) {
+        mDialogTheme = DialogThemes.getSelectedDialogTheme(settings);
+
+        if (mDialogTheme == DialogThemes.Default) {
+            return;
+        }
+
         mModRes = modRes;
         mSettings = settings;
-        mDialogTheme = DialogThemes.getSelectedDialogTheme(mSettings);
 
         if (mDialogTheme == DialogThemes.Holo_Dark) {
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_power_off", modRes.fwd(R.drawable.ic_lock_power_off));
