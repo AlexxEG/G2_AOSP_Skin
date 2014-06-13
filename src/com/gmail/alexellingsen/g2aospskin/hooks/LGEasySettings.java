@@ -2,10 +2,8 @@ package com.gmail.alexellingsen.g2aospskin.hooks;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.XModuleResources;
 import android.graphics.Typeface;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
@@ -117,22 +115,6 @@ public class LGEasySettings {
     }
 
     public static void fixPreferenceFont(LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookConstructor(
-                PACKAGE + ".EasySwitchPreference",
-                lpparam.classLoader,
-                Context.class,
-                AttributeSet.class,
-                int.class,
-
-                new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        // Not sure if needed, but do it to be safe.
-                        param.args[2] = android.R.attr.preferenceStyle;
-                    }
-                }
-        );
-
         XC_MethodHook hook = new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
