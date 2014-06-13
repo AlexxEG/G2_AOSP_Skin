@@ -4,30 +4,43 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.XResources;
 import android.view.ContextThemeWrapper;
-import com.gmail.alexellingsen.g2aospskin.Prefs;
+import com.gmail.alexellingsen.g2aospskin.DialogThemes;
+import com.gmail.alexellingsen.g2aospskin.G2AOSPSkin;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.util.ArrayList;
+
 public class LGAlertDialog {
 
     public static final String PACKAGE_NAME_LGE = "com.lge.internal";
     public static final String THEME_LGE_DIALOG = "Theme.LGE.Default.Dialog";
     public static final String THEME_LGE_DIALOG_ALERT = "Theme.LGE.Default.Dialog.Alert";
+    public static final String THEME_LGE_WHITE_DIALOG = "Theme.LGE.White.Dialog";
+    public static final String THEME_LGE_WHITE_DIALOG_ALERT = "Theme.LGE.White.Dialog.Alert";
 
     private static SettingsHelper mSettings;
-    private static int mDialogStyleLGE;
-    private static int mDialogAlertStyleLGE;
-
+    private static ArrayList<Integer> mLGEThemes;
     private static boolean mIsLGDialog = false;
+    private static DialogThemes mDialogTheme;
 
     public static void init(SettingsHelper settings) {
-        mSettings = settings;
+        mDialogTheme = DialogThemes.getSelectedDialogTheme(settings);
 
-        mDialogStyleLGE = XResources.getSystem().getIdentifier(THEME_LGE_DIALOG, "style", PACKAGE_NAME_LGE);
-        mDialogAlertStyleLGE = XResources.getSystem().getIdentifier(THEME_LGE_DIALOG_ALERT, "style", PACKAGE_NAME_LGE);
+        if (mDialogTheme == DialogThemes.Default) {
+            return;
+        }
+
+        mSettings = settings;
+        mLGEThemes = new ArrayList<Integer>();
+
+        mLGEThemes.add(XResources.getSystem().getIdentifier(THEME_LGE_DIALOG, "style", PACKAGE_NAME_LGE));
+        mLGEThemes.add(XResources.getSystem().getIdentifier(THEME_LGE_DIALOG_ALERT, "style", PACKAGE_NAME_LGE));
+        mLGEThemes.add(XResources.getSystem().getIdentifier(THEME_LGE_WHITE_DIALOG, "style", PACKAGE_NAME_LGE));
+        mLGEThemes.add(XResources.getSystem().getIdentifier(THEME_LGE_WHITE_DIALOG_ALERT, "style", PACKAGE_NAME_LGE));
 
         try {
             XposedHelpers.findAndHookMethod(
@@ -40,9 +53,6 @@ public class LGAlertDialog {
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                             // Set window background to transparent on LG dialogs.
                             if (mIsLGDialog) {
-                                if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_DIALOG, false))
-                                    return;
-
                                 AlertDialog dialog = (AlertDialog) param.getResult();
 
                                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -58,11 +68,20 @@ public class LGAlertDialog {
                                 Object alertParams = XposedHelpers.getObjectField(param.thisObject, "P");
                                 Context context = (Context) XposedHelpers.getObjectField(alertParams, "mContext");
 
-                                if (theme == mDialogStyleLGE || theme == mDialogAlertStyleLGE) {
-                                    if (!mSettings.getBoolean(Prefs.AOSP_THEME_LG_DIALOG, false))
-                                        return;
+                                String title = (String) XposedHelpers.getObjectField(alertParams, "mTitle");
 
-                                    int newTheme = android.R.style.Theme_Holo_Dialog;
+                                G2AOSPSkin.log("AlertDialog title: " + title);
+                                G2AOSPSkin.log("AlertDialog theme: " + theme);
+
+                                if (mLGEThemes.contains(theme)) {
+                                    int newTheme;
+
+                                    if (mDialogTheme == DialogThemes.Holo_Dark) {
+                                        newTheme = android.R.style.Theme_Holo_Dialog;
+                                    } else {
+                                        newTheme = android.R.style.Theme_Holo_Light_Dialog;
+                                    }
+
                                     Context newContext = new ContextThemeWrapper(context, newTheme);
 
                                     XposedHelpers.setObjectField(alertParams, "mContext", newContext);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dialogTheme">
+        <item>@string/dialog_theme_default</item>
+        <item>@string/dialog_theme_dark</item>
+        <item>@string/dialog_theme_light</item>
+    </string-array>
+
+    <string-array name="dialogThemeValues">
+        <item>theme_default</item>
+        <item>holo_dark</item>
+        <item>holo_light</item>
+    </string-array>
+</resources>

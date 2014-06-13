@@ -11,7 +11,7 @@ import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gmail.alexellingsen.g2aospskin.Prefs;
+import com.gmail.alexellingsen.g2aospskin.DialogThemes;
 import com.gmail.alexellingsen.g2aospskin.R;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 import de.robv.android.xposed.XC_MethodHook;
@@ -19,6 +19,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class PowerMenu {
 
     public static final String PACKAGE_NAME = "android";
@@ -27,12 +28,14 @@ public class PowerMenu {
 
     private static XModuleResources mModRes;
     private static SettingsHelper mSettings;
+    private static DialogThemes mDialogTheme;
 
     public static void init(SettingsHelper settings, XModuleResources modRes) {
         mModRes = modRes;
         mSettings = settings;
+        mDialogTheme = DialogThemes.getSelectedDialogTheme(mSettings);
 
-        if (mSettings.getBoolean(Prefs.AOSP_THEME_POWER_MENU, false)) {
+        if (mDialogTheme == DialogThemes.Holo_Dark) {
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_power_off", modRes.fwd(R.drawable.ic_lock_power_off));
             XResources.setSystemWideReplacement(PACKAGE_NAME_LGE, "drawable", "ic_lock_restart", modRes.fwd(R.drawable.ic_lock_reboot));
             XResources.setSystemWideReplacement(PACKAGE_NAME, "drawable", "ic_lock_airplane_mode", modRes.fwd(R.drawable.ic_lock_airplane_mode));
@@ -54,7 +57,7 @@ public class PowerMenu {
 
         // No need to do the hooks if option is not enabled, especially because a reboot
         // is required either way.
-        if (!mSettings.getBoolean(Prefs.AOSP_THEME_POWER_MENU, false)) {
+        if (mDialogTheme == DialogThemes.Default) {
             return;
         }
 
@@ -69,7 +72,16 @@ public class PowerMenu {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                             Context context = (Context) param.args[0];
-                            ContextThemeWrapper newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog);
+
+                            int theme;
+
+                            if (mDialogTheme == DialogThemes.Holo_Dark) {
+                                theme = android.R.style.Theme_Holo_Dialog;
+                            } else {
+                                theme = android.R.style.Theme_Holo_Light_Dialog;
+                            }
+
+                            ContextThemeWrapper newContext = new ContextThemeWrapper(context, theme);
 
                             // Set context to a new one with AOSP style.
                             param.args[0] = newContext;
@@ -91,8 +103,11 @@ public class PowerMenu {
                             Resources resources = context.getResources();
                             ListView lv = (ListView) XposedHelpers.callMethod(param.thisObject, "getListView");
 
-                            // Set the divider to a lighter variant.
-                            lv.setDivider(resources.getDrawable(android.R.drawable.divider_horizontal_dark));
+                            if (mDialogTheme == DialogThemes.Holo_Light) {
+                                lv.setDivider(resources.getDrawable(android.R.drawable.divider_horizontal_bright));
+                            } else {
+                                lv.setDivider(resources.getDrawable(android.R.drawable.divider_horizontal_dark));
+                            }
                         }
                     }
             );
@@ -109,9 +124,13 @@ public class PowerMenu {
                             resources.getIdentifier("message", "id", PACKAGE_NAME)
                     );
 
-                    int color = resources.getColor(android.R.color.primary_text_dark);
+                    // Fix text color for Holo Dark
+                    if (mDialogTheme == DialogThemes.Holo_Dark) {
+                        int color = resources.getColor(android.R.color.primary_text_dark);
 
-                    textMessage.setTextColor(color);
+                        textMessage.setTextColor(color);
+                    }
+
                     textMessage.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
                 }
             };
