@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.preference.*;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +16,7 @@ import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 
 import java.util.Arrays;
 
-public class MainActivity extends PrefsActivity {
+public class MainActivity extends PreferenceActivity {
 
     private SettingsHelper mSettings;
 
