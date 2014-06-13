@@ -4,8 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.*;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import com.gmail.alexellingsen.g2aospskin.hooks.LGSettings;
@@ -14,7 +19,7 @@ import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
 
 import java.util.Arrays;
 
-public class MainActivity extends PreferenceActivity {
+public class MainActivity extends PrefsActivity {
 
     private SettingsHelper mSettings;
 
@@ -28,6 +33,24 @@ public class MainActivity extends PreferenceActivity {
                 .beginTransaction()
                 .replace(android.R.id.content, new MainFragment())
                 .commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getApplicationContext(), PrefsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     class MainFragment extends PreferenceFragment {
@@ -99,10 +122,12 @@ public class MainActivity extends PreferenceActivity {
         }
 
         private void killApp(String packageName) {
-            if (mSettings.getBoolean(Prefs.KILL_APP_DONT_ASK_AGAIN, false)) {
-                RootFunctions.killApp(packageName);
-            } else {
+            if (mSettings.getBoolean(Prefs.KILL_APP_SHOW_POPUP, true)) {
                 showKillAppConfirmation(packageName);
+            } else {
+                if (mSettings.getBoolean(Prefs.KILL_APP, false)) {
+                    RootFunctions.killApp(packageName);
+                }
             }
         }
 
@@ -114,17 +139,20 @@ public class MainActivity extends PreferenceActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle(getString(R.string.title_kill_app))
                     .setMessage(getString(R.string.message_kill_app))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mSettings.putBoolean(Prefs.KILL_APP_DONT_ASK_AGAIN, dontAskAgain.isChecked());
+                            mSettings.putBoolean(Prefs.KILL_APP_SHOW_POPUP, !dontAskAgain.isChecked());
+                            mSettings.putBoolean(Prefs.KILL_APP, true);
                             RootFunctions.killApp(packageName);
                             dialog.dismiss();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            mSettings.putBoolean(Prefs.KILL_APP_SHOW_POPUP, !dontAskAgain.isChecked());
+                            mSettings.putBoolean(Prefs.KILL_APP, false);
                             dialog.dismiss();
                         }
                     })

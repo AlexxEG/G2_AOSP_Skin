@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:disableDependentsState="true"
+        android:key="pref_kill_app_show_popup"
+        android:summary="@string/pref_kill_app_show_popup_summary"
+        android:title="@string/pref_kill_app_show_popup"/>
+
+    <CheckBoxPreference
+        android:dependency="pref_kill_app_show_popup"
+        android:key="pref_kill_app"
+        android:summary="@string/pref_kill_app_summary"
+        android:title="@string/pref_kill_app"/>
+
+</PreferenceScreen>
