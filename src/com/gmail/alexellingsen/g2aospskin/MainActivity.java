@@ -3,16 +3,15 @@ package com.gmail.alexellingsen.g2aospskin;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.preference.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import com.gmail.alexellingsen.g2aospskin.hooks.LGSettings;
 import com.gmail.alexellingsen.g2aospskin.utils.RootFunctions;
 import com.gmail.alexellingsen.g2aospskin.utils.SettingsHelper;
+
+import java.util.Arrays;
 
 public class MainActivity extends PreferenceActivity {
 
@@ -52,6 +51,36 @@ public class MainActivity extends PreferenceActivity {
                     return true;
                 }
             });
+
+            final ListPreference pDialog = (ListPreference) findPreference(Prefs.AOSP_THEME_LG_DIALOG);
+            final ListPreference pPowerMenu = (ListPreference) findPreference(Prefs.AOSP_THEME_POWER_MENU);
+
+            pDialog.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String[] values = getResources().getStringArray(R.array.dialogThemeValues);
+                    int index = Arrays.asList(values).indexOf(newValue);
+                    String entry = getResources().getStringArray(R.array.dialogTheme)[index];
+
+                    pDialog.setSummary(getString(R.string.pref_dialog_summary) + " Selected: " + entry);
+                    return true;
+                }
+            });
+
+            pPowerMenu.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String[] values = getResources().getStringArray(R.array.dialogThemeValues);
+                    int index = Arrays.asList(values).indexOf(newValue);
+                    String entry = getResources().getStringArray(R.array.dialogTheme)[index];
+
+                    pPowerMenu.setSummary(getString(R.string.pref_power_menu_summary) + " Selected: " + entry);
+                    return true;
+                }
+            });
+
+            pDialog.getOnPreferenceChangeListener().onPreferenceChange(pDialog, pDialog.getValue());
+            pPowerMenu.getOnPreferenceChangeListener().onPreferenceChange(pPowerMenu, pPowerMenu.getValue());
         }
 
         private void killApp(String packageName) {
