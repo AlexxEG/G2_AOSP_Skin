@@ -71,7 +71,7 @@ public class PowerMenu {
                             Context context = (Context) param.args[0];
                             ContextThemeWrapper newContext = new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog);
 
-                            // Set new context with with AOSP style.
+                            // Set context to a new one with AOSP style.
                             param.args[0] = newContext;
                         }
                     }
