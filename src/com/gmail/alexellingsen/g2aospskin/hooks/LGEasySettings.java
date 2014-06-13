@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XModuleResources;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -132,23 +133,23 @@ public class LGEasySettings {
                 }
         );
 
-        XposedHelpers.findAndHookMethod(
-                PACKAGE + ".EasySwitchPreference",
-                lpparam.classLoader,
-                "onBindView",
-                View.class,
+        XC_MethodHook hook = new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                View view = (View) param.args[0];
+                TextView textView = (TextView) view.findViewById(android.R.id.title);
 
-                new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        View view = (View) param.args[0];
-                        TextView textView = (TextView) view.findViewById(android.R.id.title);
+                // Remove bold style
+                Typeface newTT = Typeface.create(textView.getTypeface(), Typeface.NORMAL);
+                textView.setTypeface(newTT);
+            }
+        };
 
-                        // Remove bold style
-                        textView.setTypeface(null, 0);
-                    }
-                }
-        );
+        XposedHelpers.findAndHookMethod(PACKAGE + ".EasySwitchPreference", lpparam.classLoader,
+                "onBindView", View.class, hook);
+
+        XposedHelpers.findAndHookMethod("com.lge.settings.display.EasyBrightnessPreference", lpparam.classLoader,
+                "onBindView", View.class, hook);
     }
 
     private static class Icons {
