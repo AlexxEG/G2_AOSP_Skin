@@ -26,4 +26,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Shortcuts">
+
+        <Preference
+            android:key="shortcut_xposed"
+            android:persistent="false"
+            android:summary="Shortcut to soft reboot."
+            android:title="Xposed Framework Section"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

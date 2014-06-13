@@ -2,6 +2,7 @@ package com.gmail.alexellingsen.g2aospskin;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.*;
 import android.view.LayoutInflater;
@@ -81,6 +82,20 @@ public class MainActivity extends PreferenceActivity {
 
             pDialog.getOnPreferenceChangeListener().onPreferenceChange(pDialog, pDialog.getValue());
             pPowerMenu.getOnPreferenceChangeListener().onPreferenceChange(pPowerMenu, pPowerMenu.getValue());
+
+            Preference pXposedShortcut = findPreference("shortcut_xposed");
+
+            pXposedShortcut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent("de.robv.android.xposed.installer.OPEN_SECTION");
+                    intent.setPackage("de.robv.android.xposed.installer");
+                    intent.putExtra("section", "install");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    return true;
+                }
+            });
         }
 
         private void killApp(String packageName) {
