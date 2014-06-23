@@ -17,6 +17,8 @@
     <string name="pref_lg_messenger">LG Messenger</string>
     <string name="pref_power_menu">Power/Reboot Menu</string>
     <string name="pref_power_menu_summary">Requires reboot.</string>
+    <string name="pref_replace_menu_key">Allow Menu key to be removed.</string>
+    <string name="pref_replace_menu_key_summary">Allows the Menu key to be removed with the front keys combination option in LG\'s settings. Recent Apps becomes required.</string>
     <string name="pref_settings">Settings</string>
     <string name="title_kill_app">Kill App</string>
     <string name="yes">Yes</string>

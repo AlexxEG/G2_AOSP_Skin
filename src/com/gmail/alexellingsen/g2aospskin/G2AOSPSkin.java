@@ -30,6 +30,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGEasySettings.init(mSettings, modRes);
         LGMessenger.init(mSettings, modRes);
         LGSettings.init(mSettings, modRes);
+        NavigationBar.init(mSettings, modRes);
         PowerMenu.init(mSettings, modRes);
 
         XposedBridge.log(TAG + " Debug enabled: " + DEBUG);
@@ -41,6 +42,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGEasySettings.handleLoadPackage(lpparam);
         LGMessenger.handleLoadPackage(lpparam);
         LGSettings.handleLoadPackage(lpparam);
+        NavigationBar.handleLoadPackage(lpparam);
         PowerMenu.handleLoadPackage(lpparam);
     }
 
@@ -50,6 +52,7 @@ public class G2AOSPSkin implements IXposedHookZygoteInit, IXposedHookLoadPackage
         LGEasySettings.handleInitPackageResources(resparam);
         LGMessenger.handleInitPackageResources(resparam);
         LGSettings.handleInitPackageResources(resparam);
+        NavigationBar.handleInitPackageResources(resparam);
         PowerMenu.handleInitPackageResources(resparam);
     }
 

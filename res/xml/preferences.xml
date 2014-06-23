@@ -2,6 +2,15 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="General">
+
+        <CheckBoxPreference
+            android:key="pref_replace_menu_key"
+            android:summary="@string/pref_replace_menu_key_summary"
+            android:title="@string/pref_replace_menu_key" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Enable AOSP like theme for...">
 
         <ListPreference
@@ -10,7 +19,7 @@
             android:entryValues="@array/dialogThemeValues"
             android:key="pref_aosp_theme_dialog"
             android:summary="@string/pref_dialog_summary"
-            android:title="@string/pref_dialog"/>
+            android:title="@string/pref_dialog" />
 
         <ListPreference
             android:defaultValue="theme_default"
@@ -18,11 +27,11 @@
             android:entryValues="@array/dialogThemeValues"
             android:key="pref_aosp_theme_power_menu"
             android:summary="@string/pref_power_menu_summary"
-            android:title="@string/pref_power_menu"/>
+            android:title="@string/pref_power_menu" />
 
         <CheckBoxPreference
             android:key="pref_aosp_theme_settings"
-            android:title="@string/pref_settings"/>
+            android:title="@string/pref_settings" />
 
     </PreferenceCategory>
 
@@ -32,7 +41,7 @@
             android:key="shortcut_xposed"
             android:persistent="false"
             android:summary="Shortcut to soft reboot."
-            android:title="Xposed Framework Section"/>
+            android:title="Xposed Framework Section" />
 
     </PreferenceCategory>
 

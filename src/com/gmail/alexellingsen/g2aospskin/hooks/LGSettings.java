@@ -126,20 +126,27 @@ public class LGSettings {
             return;
         }
 
-        if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
-            return;
+        if (mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false)) {
+            Icons.replace(resparam);
 
-        Icons.replace(resparam);
+            // Replace WiFi signal icons
+            resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_open", mModRes.fwd(R.drawable.wifi_signal_open));
+            resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_lock", mModRes.fwd(R.drawable.wifi_signal_lock));
+        }
 
-        // Replace WiFi signal icons
-        resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_open", mModRes.fwd(R.drawable.wifi_signal_open));
-        resparam.res.setReplacement(PACKAGE, "drawable", "wifi_signal_lock", mModRes.fwd(R.drawable.wifi_signal_lock));
+        if (mSettings.getBoolean(Prefs.REPLACE_MENU_KEY, false)) {
+            // Switch the Menu & Recent Apps keys, making the Recent Apps key required instead of Menu key.
+            resparam.res.setReplacement(PACKAGE, "array", "up_tray_items", mModRes.fwd(R.array.up_tray_items));
+            resparam.res.setReplacement(PACKAGE, "array", "down_tray_items", mModRes.fwd(R.array.down_tray_items));
+        }
     }
 
     public static void handleLoadPackage(LoadPackageParam lpparam) {
         if (!lpparam.packageName.equals(PACKAGE)) {
             return;
         }
+
+        handleFrontKeys(lpparam);
 
         if (!mSettings.getBoolean(Prefs.AOSP_THEME_SETTINGS, false))
             return;
@@ -232,6 +239,34 @@ public class LGSettings {
                         }
                     }
             );
+        }
+    }
+
+    private static void handleFrontKeys(LoadPackageParam lpparam) {
+        try {
+            XposedHelpers.findAndHookConstructor(
+                    "com.android.settings.dragndrop.ButtonItem",
+                    lpparam.classLoader,
+                    String.class,
+                    String.class,
+                    int.class,
+                    int.class,
+
+                    new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            String k = (String) XposedHelpers.getObjectField(param.thisObject, "mKey");
+                            String n = (String) XposedHelpers.getObjectField(param.thisObject, "mName");
+
+                            if (k.equals("Menu") && n.equals("Meny")) {
+                                // Make the Menu key a item that can be removed.
+                                XposedHelpers.setIntField(param.thisObject, "mType", 1);
+                            }
+                        }
+                    }
+            );
+        } catch (Throwable e) {
+            XposedBridge.log(e);
         }
     }
 

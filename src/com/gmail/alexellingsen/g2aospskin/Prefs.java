@@ -12,4 +12,5 @@ public class Prefs {
     public static final String AOSP_THEME_POWER_MENU = "pref_aosp_theme_power_menu";
     public static final String KILL_APP = "pref_kill_app";
     public static final String KILL_APP_SHOW_POPUP = "pref_kill_app_show_popup";
+    public static final String REPLACE_MENU_KEY = "pref_replace_menu_key";
 }

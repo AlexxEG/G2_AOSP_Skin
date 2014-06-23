@@ -18,6 +18,7 @@ public class PrefsActivity extends PreferenceActivity {
     }
 
     class PrefsFragment extends PreferenceFragment {
+        @SuppressWarnings("deprecation")
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

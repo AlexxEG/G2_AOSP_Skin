@@ -11,4 +11,18 @@
         <item>holo_dark</item>
         <item>holo_light</item>
     </string-array>
+
+    <string-array name="up_tray_items">
+        <item>Back</item>
+        <item>Home</item>
+        <item>RecentApps</item>
+    </string-array>
+
+    <string-array name="down_tray_items">
+        <item>Notification</item>
+        <item>QMemo</item>
+        <item>Menu</item>
+        <item>SimSwitch</item>
+        <item>QSlide</item>
+    </string-array>
 </resources>
